@@ -10,14 +10,18 @@ const App = () => {
     setLoading(true);
     try {
       const response = await fetch('https://official-joke-api.appspot.com/random_joke');
+      if (!response.ok) {
+        throw new Error(`Joke API request failed with status ${response.status}`);
+      }
+
       const data = await response.json();
       setJoke(data);
-      console.log('Fetched joke:', data);
-      setLoading(false);
       setErrorMsg('');
     } catch (error) {
       console.error('Error fetching joke:', error);
-      setErrorMsg('Failed to fetch joke. Please try again later.');
+      setJoke('');
+      setErrorMsg('Could not fetch a joke. Try again.');
+    } finally {
       setLoading(false);
     }
   }
